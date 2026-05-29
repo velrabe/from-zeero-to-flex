@@ -9,6 +9,28 @@
 <body>
   <!-- 16:9 Game container -->
   <main class="game-container">
+    <aside class="sidebar" aria-label="Основная навигация">
+      <div class="brand-mark">
+        <span>FROM</span>
+        <strong>ZERO</strong>
+        <span>TO <b>FLEX</b></span>
+      </div>
+      <nav class="side-nav">
+        <a class="side-nav-link active" href="#screen-home" data-screen="home">⌂ <span>Главная</span></a>
+        <a class="side-nav-link" href="#screen-businesses" data-screen="businesses">♙ <span>Бизнесы</span></a>
+        <a class="side-nav-link" href="#screen-businesses" data-screen="businesses">♧ <span>Работа</span></a>
+        <a class="side-nav-link" href="#screen-businesses" data-screen="businesses">♕ <span>Достижения</span></a>
+        <a class="side-nav-link" href="#screen-shop" data-screen="shop">♨ <span>Магазин</span></a>
+      </nav>
+      <div class="profile-card">
+        <div class="profile-avatar"></div>
+        <div>
+          <strong>StreamerX</strong>
+          <span>LVL 7</span>
+          <div class="profile-progress"><i></i></div>
+        </div>
+      </div>
+    </aside>
     <!-- ========== SCREEN: Home / Dashboard ========== -->
     <section id="screen-home" class="screen active">
       <header class="header">
@@ -29,6 +51,16 @@
           <span id="income-per-sec">+0</span>/сек
         </div>
       </div>
+
+      <div class="hero-card">
+        <div>
+          <p>Путь предпринимателя начинается с первого шага.</p>
+          <span>Собирай, развивай, масштабируй.</span>
+        </div>
+        <div class="hero-placeholder"></div>
+      </div>
+
+      <h2 class="section-heading">Статистика</h2>
 
       <div class="main-actions">
         <button class="btn-primary btn-work" data-action="work">

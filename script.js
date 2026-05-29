@@ -109,14 +109,21 @@ function tick() {
   state.lastTick = now;
   state.balance += state.incomePerSec * dt;
   setBalance(state.balance);
-  document.getElementById('income-per-sec').textContent = '+' + formatNum(state.incomePerSec);
+  document.getElementById('income-per-sec').textContent = '+' + formatNum(state.incomePerSec) + '/сек';
 }
 
 // ========== Navigation ==========
+function setActiveNav(id) {
+  document.querySelectorAll('.side-nav-link').forEach(link => {
+    link.classList.toggle('active', link.dataset.screen === id);
+  });
+}
+
 function showScreen(id, data = {}) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const screen = document.getElementById('screen-' + id);
   if (screen) screen.classList.add('active');
+  setActiveNav(id);
 
   if (id === 'info' && data.business) {
     renderBusinessInfo(data.business);
@@ -282,6 +289,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Empty state
   document.querySelector('#empty-state .btn-accent').onclick = () => showScreen('shop');
+
+  // Sidebar navigation
+  document.querySelectorAll('.side-nav-link[data-screen]').forEach(link => {
+    link.onclick = (e) => {
+      e.preventDefault();
+      showScreen(link.dataset.screen);
+    };
+  });
 
   // Back buttons
   document.querySelectorAll('[data-back]').forEach(btn => {
