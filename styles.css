@@ -40,9 +40,10 @@ button {
 .game-container {
   position: fixed;
   inset: 0;
-  width: min(100vw, calc(100vh * 9 / 16));
-  height: min(100vh, calc(100vw * 16 / 9));
-  min-height: 640px;
+  width: min(100vw, calc(100vh * 16 / 9));
+  max-width: 100vw;
+  height: 100vh;
+  min-height: 0;
   margin: auto;
   display: grid;
   grid-template-rows: 1fr 48px;
@@ -262,15 +263,22 @@ button {
 
 /* Shared screen header */
 .screen-header {
+  position: relative;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
-  min-height: 54px;
-  padding: 8px 8px 7px;
+  min-height: 58px;
+  padding: 11px 10px 10px;
   background: var(--cream);
+  border-bottom: 2px solid var(--blue-line);
 }
 
 .btn-back {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -293,16 +301,20 @@ button {
 }
 
 .screen-title {
-  flex: 1;
-  margin: 0;
-  padding: 12px 10px;
-  color: #fff;
+  max-width: calc(100% - 118px);
+  margin: 0 auto;
+  padding: 0;
+  color: var(--ink);
   text-align: center;
-  font-size: 17px;
-  line-height: 1;
-  background: linear-gradient(180deg, #0c55bd, var(--blue));
-  border: 2px solid var(--blue-line);
-  border-radius: 3px 3px 0 0;
+  font-size: 20px;
+  line-height: 1.05;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+.screen-header > div {
+  width: 100%;
 }
 
 .screen-subtitle {
@@ -371,7 +383,6 @@ button {
 .business-list.has-items {
   gap: 0;
   border: 2px solid var(--border);
-  border-top: 0;
   background: var(--paper);
 }
 
