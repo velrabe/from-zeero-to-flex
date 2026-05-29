@@ -4,6 +4,7 @@ const BUSINESSES = [
     id: 'lemonade',
     name: 'Лимонный ларек',
     icon: '🍋',
+    image: 'assets/businesses/lemonade.png',
     price: 80,
     baseIncome: 8,
     desc: 'Простой уличный ларек с лимонадом. Быстрая окупаемость.',
@@ -17,6 +18,7 @@ const BUSINESSES = [
     id: 'coffee',
     name: 'Кофейня',
     icon: '☕',
+    image: 'assets/businesses/coffee.png',
     price: 1200,
     baseIncome: 35,
     desc: 'Уютное место для кофе и работы. Стабильный поток клиентов.',
@@ -30,6 +32,7 @@ const BUSINESSES = [
     id: 'startup',
     name: 'Стартап',
     icon: '💻',
+    image: 'assets/businesses/startup.png',
     price: 6000,
     baseIncome: 180,
     desc: 'IT-компания на взлёте. Высокий потенциал роста.',
@@ -43,6 +46,7 @@ const BUSINESSES = [
     id: 'cybersport',
     name: 'Киберспорт Арена',
     icon: '🎮',
+    image: 'assets/businesses/cybersport.png',
     price: 35000,
     baseIncome: 1200,
     desc: 'Арена для киберспорта. Турниры и стримы.',
@@ -55,6 +59,7 @@ const BUSINESSES = [
     id: 'erp',
     name: 'Сеть ERP',
     icon: '🏢',
+    image: 'assets/businesses/erp.png',
     price: 900000,
     baseIncome: 15000,
     desc: 'Корпоративная система. Пик масштаба.',
@@ -164,7 +169,7 @@ function renderOwnedBusinesses() {
     const card = document.createElement('div');
     card.className = 'card card-owned business-card';
     card.innerHTML = `
-      <div class="card-icon">${biz.icon}</div>
+      <img class="card-icon" src="${biz.image}" alt="">
       <div class="card-body">
         <p class="card-name">${biz.name}</p>
         <div class="card-meta">
@@ -202,7 +207,7 @@ function renderShop() {
     card.className = `shop-card ${affordable ? 'affordable' : ''} ${locked ? 'locked' : ''}`;
     card.innerHTML = `
       <div class="shop-card-left">
-        <div class="shop-card-icon">${biz.icon}</div>
+        <img class="shop-card-icon" src="${biz.image}" alt="">
         <div>
           <div class="shop-card-name">${biz.name}</div>
           <div class="shop-card-income">+${formatNum(biz.baseIncome)}/сек</div>
@@ -219,6 +224,9 @@ function renderShop() {
 
 function renderBusinessInfo(biz) {
   document.getElementById('info-title').textContent = biz.name;
+  const icon = document.getElementById('info-icon');
+  icon.src = biz.image;
+  icon.alt = biz.name;
   document.getElementById('info-desc').textContent = biz.desc;
   document.getElementById('info-cost').textContent = formatNum(biz.price);
   document.getElementById('info-income').textContent = '+' + formatNum(biz.baseIncome) + '/сек';
@@ -253,7 +261,7 @@ function renderUpgrades(biz) {
     card.className = `upgrade-card ${isBought ? 'bought' : affordable ? 'affordable' : locked ? 'locked' : ''}`;
     card.innerHTML = `
       <div class="upgrade-card-left">
-        <div class="upgrade-card-icon">📈</div>
+        <img class="upgrade-card-icon" src="assets/icons/upgrade.png" alt="">
         <div>
           <div class="upgrade-card-name">${upg.name}</div>
           <div class="upgrade-card-income">+${formatNum(upg.income)}/сек</div>

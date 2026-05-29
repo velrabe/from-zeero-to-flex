@@ -16,20 +16,20 @@
           <span>ZERO</span>
           <span>TO <b>FLEX</b></span>
         </div>
-        <div class="hero-illustration placeholder-rect"></div>
+        <img class="hero-illustration" src="assets/screens/home-hero.png" alt="">
       </header>
 
       <section class="info-panel" aria-label="Информация">
         <h1>Информация</h1>
         <div class="stat-row">
-          <div class="icon-placeholder"></div>
+          <img class="stat-icon" src="assets/icons/money.png" alt="">
           <div>
             <strong><span id="balance-display">0</span> $</strong>
             <span>Общая сумма</span>
           </div>
         </div>
         <div class="stat-row">
-          <div class="icon-placeholder"></div>
+          <img class="stat-icon" src="assets/icons/income.png" alt="">
           <div>
             <strong><span id="income-per-sec">+0</span></strong>
             <span>Доход в день</span>
@@ -39,11 +39,11 @@
 
       <div class="main-actions">
         <button class="btn-primary btn-work" data-action="work">
-          <span class="icon-placeholder"></span>
+          <img class="btn-action-icon" src="assets/icons/work.png" alt="">
           Начать работу
         </button>
         <button class="btn-primary btn-shop" data-action="shop">
-          <span class="icon-placeholder"></span>
+          <img class="btn-action-icon" src="assets/icons/cart.png" alt="">
           Купить бизнес
         </button>
       </div>
@@ -57,7 +57,7 @@
 
       <div class="business-list" id="owned-businesses">
         <div class="empty-state" id="empty-state">
-          <div class="empty-illustration placeholder-rect"></div>
+          <img class="empty-illustration" src="assets/screens/empty-businesses.png" alt="">
           <h2>Бизнесов пока нет</h2>
           <p>Купи свой первый бизнес<br>и начни зарабатывать!</p>
           <button class="btn-accent" data-action="shop">Купить бизнес</button>
@@ -81,7 +81,7 @@
       </header>
 
       <div class="business-info" id="business-info-panel">
-        <div class="info-icon placeholder-rect" id="info-icon"></div>
+        <img class="info-icon" id="info-icon" src="assets/businesses/lemonade.png" alt="Лимонный ларек">
         <h2 class="info-name" id="info-title">Лимонный ларек</h2>
         <p class="info-desc" id="info-desc">Простой уличный ларек с лимонадом. Быстрая окупаемость.</p>
         <div class="info-stats">
@@ -105,11 +105,11 @@
     </section>
 
     <nav class="bottom-nav" aria-label="Основная навигация">
-      <button class="bottom-nav-link active" data-screen="home"><span></span>Главная</button>
-      <button class="bottom-nav-link" data-screen="businesses"><span></span>Бизнесы</button>
-      <button class="bottom-nav-link" data-screen="businesses"><span></span>Работа</button>
-      <button class="bottom-nav-link" data-screen="businesses"><span></span>Достижения</button>
-      <button class="bottom-nav-link" data-screen="shop"><span></span>Магазин</button>
+      <button class="bottom-nav-link active" data-screen="home"><img src="assets/icons/home.png" alt="">Главная</button>
+      <button class="bottom-nav-link" data-screen="businesses"><img src="assets/icons/businesses.png" alt="">Бизнесы</button>
+      <button class="bottom-nav-link" data-screen="businesses"><img src="assets/icons/tools.png" alt="">Работа</button>
+      <button class="bottom-nav-link" data-screen="businesses"><img src="assets/icons/trophy.png" alt="">Достижения</button>
+      <button class="bottom-nav-link" data-screen="shop"><img src="assets/icons/cart.png" alt="">Магазин</button>
     </nav>
   </main>
 
