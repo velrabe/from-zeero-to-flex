@@ -109,14 +109,21 @@ function tick() {
   state.lastTick = now;
   state.balance += state.incomePerSec * dt;
   setBalance(state.balance);
-  document.getElementById('income-per-sec').textContent = '+' + formatNum(state.incomePerSec);
+  document.getElementById('income-per-sec').textContent = '+' + formatNum(state.incomePerSec) + '/сек';
 }
 
 // ========== Navigation ==========
+function setActiveNav(id) {
+  document.querySelectorAll('.bottom-nav-link').forEach(link => {
+    link.classList.toggle('active', link.dataset.screen === id);
+  });
+}
+
 function showScreen(id, data = {}) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const screen = document.getElementById('screen-' + id);
   if (screen) screen.classList.add('active');
+  setActiveNav(id);
 
   if (id === 'info' && data.business) {
     renderBusinessInfo(data.business);
@@ -135,7 +142,8 @@ function renderOwnedBusinesses() {
   const empty = document.getElementById('empty-state');
   const keys = Object.keys(state.owned);
 
-  empty.style.display = keys.length === 0 ? 'block' : 'none';
+  empty.style.display = keys.length === 0 ? 'flex' : 'none';
+  list.classList.toggle('has-items', keys.length > 0);
 
   list.querySelectorAll('.business-card').forEach(el => el.remove());
 
@@ -197,10 +205,10 @@ function renderShop() {
         <div class="shop-card-icon">${biz.icon}</div>
         <div>
           <div class="shop-card-name">${biz.name}</div>
-          <div style="font-size:12px;color:var(--text-secondary)">+${formatNum(biz.baseIncome)}/сек</div>
+          <div class="shop-card-income">+${formatNum(biz.baseIncome)}/сек</div>
         </div>
       </div>
-      <div class="shop-card-price ${locked ? 'locked' : ''}">${owned ? '✓' : formatNum(biz.price)}</div>
+      <div class="shop-card-price ${locked ? 'locked' : ''}">${owned ? '✓' : formatNum(biz.price) + ' $'}</div>
     `;
     if (!owned) {
       card.onclick = () => showScreen('info', { business: biz });
@@ -211,7 +219,6 @@ function renderShop() {
 
 function renderBusinessInfo(biz) {
   document.getElementById('info-title').textContent = biz.name;
-  document.getElementById('info-icon').textContent = biz.icon;
   document.getElementById('info-desc').textContent = biz.desc;
   document.getElementById('info-cost').textContent = formatNum(biz.price);
   document.getElementById('info-income').textContent = '+' + formatNum(biz.baseIncome) + '/сек';
@@ -239,7 +246,6 @@ function renderUpgrades(biz) {
   biz.upgrades.forEach((upg, idx) => {
     const isBought = bought.includes(idx);
     const cost = upg.cost;
-    const currencyIcon = upg.currency === 'purple' ? '💎' : '💰';
     const affordable = !isBought && state.balance >= cost;
     const locked = !isBought && !affordable;
 
@@ -253,7 +259,7 @@ function renderUpgrades(biz) {
           <div class="upgrade-card-income">+${formatNum(upg.income)}/сек</div>
         </div>
       </div>
-      <div class="upgrade-card-price ${locked ? 'locked' : ''}">${isBought ? '✓' : currencyIcon + ' ' + formatNum(cost)}</div>
+      <div class="upgrade-card-price ${locked ? 'locked' : ''}">${isBought ? '✓' : formatNum(cost)}</div>
     `;
     if (!isBought && affordable) {
       card.onclick = () => {
@@ -282,6 +288,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Empty state
   document.querySelector('#empty-state .btn-accent').onclick = () => showScreen('shop');
+
+  // Bottom navigation
+  document.querySelectorAll('.bottom-nav-link[data-screen]').forEach(link => {
+    link.onclick = (e) => {
+      e.preventDefault();
+      showScreen(link.dataset.screen);
+    };
+  });
 
   // Back buttons
   document.querySelectorAll('[data-back]').forEach(btn => {

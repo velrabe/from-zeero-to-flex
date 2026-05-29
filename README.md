@@ -33,3 +33,9 @@ npx serve .
 ## Стартовый баланс
 
 100 монет для тестирования первой покупки (Лимонный ларек — 80).
+
+## Публикация в GitHub Pages
+
+Репозиторий настроен для публикации текущей статической версии через GitHub Actions. Workflow `.github/workflows/github-pages.yml` запускается при пуше в ветки `work`, `main` или `master`, а также вручную через `workflow_dispatch`.
+
+После первого пуша включите Pages в настройках репозитория: **Settings → Pages → Build and deployment → Source → GitHub Actions**.

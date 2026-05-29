@@ -7,99 +7,110 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- 16:9 Game container -->
   <main class="game-container">
-    <!-- ========== SCREEN: Home / Dashboard ========== -->
     <section id="screen-home" class="screen active">
-      <header class="header">
-        <div class="logo">
-          <div class="logo-icon">
-            <span class="triangle t1"></span>
-            <span class="triangle t2"></span>
-            <span class="triangle t3"></span>
-          </div>
-          <span class="logo-text">from zero to flex</span>
+      <header class="home-hero">
+        <div class="version">v1.0.0</div>
+        <div class="brand-mark" aria-label="From Zero To Flex">
+          <span>FROM</span>
+          <span>ZERO</span>
+          <span>TO <b>FLEX</b></span>
         </div>
+        <div class="hero-illustration placeholder-rect"></div>
       </header>
 
-      <div class="balance-block">
-        <div class="balance-value" id="balance-display">0</div>
-        <div class="balance-income">
-          <span class="income-arrow">↑</span>
-          <span id="income-per-sec">+0</span>/сек
+      <section class="info-panel" aria-label="Информация">
+        <h1>Информация</h1>
+        <div class="stat-row">
+          <div class="icon-placeholder"></div>
+          <div>
+            <strong><span id="balance-display">0</span> $</strong>
+            <span>Общая сумма</span>
+          </div>
         </div>
-      </div>
+        <div class="stat-row">
+          <div class="icon-placeholder"></div>
+          <div>
+            <strong><span id="income-per-sec">+0</span></strong>
+            <span>Доход в день</span>
+          </div>
+        </div>
+      </section>
 
       <div class="main-actions">
         <button class="btn-primary btn-work" data-action="work">
-          <span class="btn-icon">🚀</span>
+          <span class="icon-placeholder"></span>
           Начать работу
         </button>
         <button class="btn-primary btn-shop" data-action="shop">
-          <span class="btn-icon">🛒</span>
+          <span class="icon-placeholder"></span>
           Купить бизнес
         </button>
       </div>
     </section>
 
-    <!-- ========== SCREEN: My Businesses ========== -->
     <section id="screen-businesses" class="screen">
-      <header class="header-nav">
-        <button class="btn-back" data-back="home">←</button>
-        <h1 class="screen-title">Мои бизнесы</h1>
+      <header class="screen-header">
+        <button class="btn-back" data-back="home">Назад</button>
+        <h1 class="screen-title">Список бизнесов</h1>
       </header>
 
       <div class="business-list" id="owned-businesses">
-        <!-- Empty state -->
         <div class="empty-state" id="empty-state">
-          <p>Ты пока на старте — купи первый бизнес</p>
+          <div class="empty-illustration placeholder-rect"></div>
+          <h2>Бизнесов пока нет</h2>
+          <p>Купи свой первый бизнес<br>и начни зарабатывать!</p>
           <button class="btn-accent" data-action="shop">Купить бизнес</button>
         </div>
-        <!-- Cards injected by JS -->
       </div>
     </section>
 
-    <!-- ========== SCREEN: Buy Business (Shop) ========== -->
     <section id="screen-shop" class="screen">
-      <header class="header-nav">
-        <button class="btn-back" data-back="home">←</button>
-        <h1 class="screen-title">Купить бизнес</h1>
+      <header class="screen-header">
+        <button class="btn-back" data-back="home">Назад</button>
+        <h1 class="screen-title">Список бизнесов на продажу</h1>
       </header>
 
-      <div class="shop-list" id="shop-list">
-        <!-- Cards injected by JS -->
-      </div>
+      <div class="shop-list" id="shop-list"></div>
     </section>
 
-    <!-- ========== SCREEN: Business Info (before purchase) ========== -->
     <section id="screen-info" class="screen">
-      <header class="header-nav">
-        <button class="btn-back" data-back="shop">←</button>
-        <h1 class="screen-title" id="info-title">Лимонный ларек</h1>
+      <header class="screen-header">
+        <button class="btn-back" data-back="shop">Назад</button>
+        <h1 class="screen-title">Информация о бизнесе</h1>
       </header>
 
       <div class="business-info" id="business-info-panel">
-        <div class="info-icon" id="info-icon">🍋</div>
+        <div class="info-icon placeholder-rect" id="info-icon"></div>
+        <h2 class="info-name" id="info-title">Лимонный ларек</h2>
         <p class="info-desc" id="info-desc">Простой уличный ларек с лимонадом. Быстрая окупаемость.</p>
         <div class="info-stats">
-          <span>Стоимость: <strong id="info-cost">80</strong></span>
-          <span>Доход: <strong id="info-income">+8/сек</strong></span>
+          <span>Стоимость:<strong id="info-cost">80</strong></span>
+          <span>Доход:<strong id="info-income">+8/сек</strong></span>
         </div>
-        <button class="btn-buy" id="btn-buy-info">Купить</button>
+        <button class="btn-buy" id="btn-buy-info">Купить бизнес</button>
       </div>
     </section>
 
-    <!-- ========== SCREEN: Business Upgrades ========== -->
     <section id="screen-upgrades" class="screen">
-      <header class="header-nav">
-        <button class="btn-back" data-back="businesses">←</button>
-        <h1 class="screen-title" id="upgrades-title">Лимонный ларек</h1>
+      <header class="screen-header">
+        <button class="btn-back" data-back="businesses">Назад</button>
+        <div>
+          <h1 class="screen-title">Информация о бизнесе</h1>
+          <p class="screen-subtitle">Доход: <span id="upgrades-title">Лимонный ларек</span></p>
+        </div>
       </header>
 
-      <div class="upgrades-list" id="upgrades-list">
-        <!-- Cards injected by JS -->
-      </div>
+      <div class="upgrades-list" id="upgrades-list"></div>
     </section>
+
+    <nav class="bottom-nav" aria-label="Основная навигация">
+      <button class="bottom-nav-link active" data-screen="home"><span></span>Главная</button>
+      <button class="bottom-nav-link" data-screen="businesses"><span></span>Бизнесы</button>
+      <button class="bottom-nav-link" data-screen="businesses"><span></span>Работа</button>
+      <button class="bottom-nav-link" data-screen="businesses"><span></span>Достижения</button>
+      <button class="bottom-nav-link" data-screen="shop"><span></span>Магазин</button>
+    </nav>
   </main>
 
   <script src="script.js"></script>
