@@ -69,11 +69,124 @@ const BUSINESSES = [
   }
 ];
 
+const WORK_TASKS = [
+  { id: 'flyers', name: 'Раздать листовки', reward: 500, xp: 10, icon: 'assets/icons/work.png' },
+  { id: 'survey', name: 'Провести опрос', reward: 750, xp: 15, icon: 'assets/icons/check.png' },
+  { id: 'event', name: 'Помочь на мероприятии', reward: 1000, xp: 20, icon: 'assets/icons/trophy.png' },
+  { id: 'delivery', name: 'Доставка продуктов', reward: 1250, xp: 25, icon: 'assets/icons/basket.png' },
+];
+
+const STORE_ITEMS = [
+  {
+    id: 'income-boost',
+    name: 'x2 дохода на 1 час',
+    desc: 'Ускорение',
+    price: 50,
+    icon: 'assets/icons/income.png',
+    repeatable: true,
+    buy() {
+      const now = Date.now();
+      state.boostUntil = Math.max(now, state.boostUntil || 0) + 60 * 60 * 1000;
+      recalcIncome();
+    }
+  },
+  {
+    id: 'day-boost',
+    name: 'x2 дохода на 24 часа',
+    desc: 'Ускорение',
+    price: 200,
+    icon: 'assets/icons/upgrade.png',
+    repeatable: true,
+    buy() {
+      const now = Date.now();
+      state.boostUntil = Math.max(now, state.boostUntil || 0) + 24 * 60 * 60 * 1000;
+      recalcIncome();
+    }
+  },
+  {
+    id: 'bonus-small',
+    name: '+5 000 $',
+    desc: 'Бонусы',
+    price: 100,
+    icon: 'assets/icons/money.png',
+    repeatable: true,
+    buy() {
+      addMoney(5000);
+    }
+  },
+  {
+    id: 'bonus-big',
+    name: '+25 000 $',
+    desc: 'Бонусы',
+    price: 400,
+    icon: 'assets/icons/money.png',
+    repeatable: true,
+    buy() {
+      addMoney(25000);
+    }
+  },
+  {
+    id: 'no-ads',
+    name: 'Убрать рекламу',
+    desc: 'Премиум',
+    price: 300,
+    icon: 'assets/icons/settings.png',
+    repeatable: false,
+    buy() {
+      state.adFree = true;
+    }
+  },
+];
+
+const ACHIEVEMENTS = [
+  {
+    id: 'first-business',
+    name: 'Первый шаг',
+    desc: 'Купить первый бизнес',
+    target: 1,
+    getProgress: () => Object.keys(state.owned).length,
+  },
+  {
+    id: 'entrepreneur',
+    name: 'Предприниматель',
+    desc: 'Купить 3 бизнеса',
+    target: 3,
+    getProgress: () => Object.keys(state.owned).length,
+  },
+  {
+    id: 'magnate',
+    name: 'Магнат',
+    desc: 'Купить 5 бизнесов',
+    target: 5,
+    getProgress: () => Object.keys(state.owned).length,
+  },
+  {
+    id: 'worker',
+    name: 'Трудоголик',
+    desc: 'Выполнить 10 работ',
+    target: 10,
+    getProgress: () => state.workDone,
+  },
+  {
+    id: 'millionaire',
+    name: 'Миллионер',
+    desc: 'Заработать 1 000 000 $',
+    target: 1000000,
+    getProgress: () => state.totalEarned,
+  },
+];
+
 // ========== Game State ==========
 let state = {
   balance: 100,
   incomePerSec: 0,
   owned: {},
+  xp: 0,
+  workDone: 0,
+  totalEarned: 100,
+  storePurchases: {},
+  boostUntil: 0,
+  adFree: false,
   lastTick: Date.now(),
 };
 
@@ -92,6 +205,16 @@ function setBalance(val) {
   balanceEl.textContent = formatNum(val);
 }
 
+function addMoney(amount) {
+  state.balance += amount;
+  state.totalEarned += amount;
+  setBalance(state.balance);
+}
+
+function getIncomeMultiplier() {
+  return state.boostUntil > Date.now() ? 2 : 1;
+}
+
 // ========== Recompute income ==========
 function recalcIncome() {
   let total = 0;
@@ -104,7 +227,7 @@ function recalcIncome() {
     }
     total += inc;
   }
-  state.incomePerSec = total;
+  state.incomePerSec = total * getIncomeMultiplier();
 }
 
 // ========== Passive income tick ==========
@@ -112,7 +235,10 @@ function tick() {
   const now = Date.now();
   const dt = (now - state.lastTick) / 1000;
   state.lastTick = now;
-  state.balance += state.incomePerSec * dt;
+  recalcIncome();
+  const earned = state.incomePerSec * dt;
+  state.balance += earned;
+  state.totalEarned += earned;
   setBalance(state.balance);
   document.getElementById('income-per-sec').textContent = '+' + formatNum(state.incomePerSec) + '/сек';
 }
@@ -138,6 +264,12 @@ function showScreen(id, data = {}) {
     renderOwnedBusinesses();
   } else if (id === 'shop') {
     renderShop();
+  } else if (id === 'work') {
+    renderWork();
+  } else if (id === 'achievements') {
+    renderAchievements();
+  } else if (id === 'store') {
+    renderStore();
   }
 }
 
@@ -240,6 +372,7 @@ function renderBusinessInfo(biz) {
     state.balance -= biz.price;
     state.owned[biz.id] = { upgrades: [] };
     recalcIncome();
+    renderAchievements();
     showScreen('home');
   };
 }
@@ -268,9 +401,10 @@ function renderUpgrades(biz) {
         </div>
       </div>
       <div class="upgrade-card-price ${locked ? 'locked' : ''}">${isBought ? '✓' : formatNum(cost)}</div>
+      <button class="btn-upgrade btn-upgrade-buy" type="button" ${isBought || locked ? 'disabled' : ''}>Улучшить</button>
     `;
     if (!isBought && affordable) {
-      card.onclick = () => {
+      const buyUpgrade = () => {
         if (state.balance < cost) return;
         state.balance -= cost;
         if (!state.owned[biz.id]) state.owned[biz.id] = { upgrades: [] };
@@ -278,7 +412,97 @@ function renderUpgrades(biz) {
         recalcIncome();
         renderUpgrades(biz);
       };
+      card.onclick = buyUpgrade;
+      card.querySelector('.btn-upgrade-buy').onclick = (e) => {
+        e.stopPropagation();
+        buyUpgrade();
+      };
     }
+    list.appendChild(card);
+  });
+}
+
+function renderWork() {
+  const list = document.getElementById('work-list');
+  const xp = document.getElementById('xp-display');
+  xp.textContent = formatNum(state.xp);
+  list.innerHTML = '';
+
+  WORK_TASKS.forEach(task => {
+    const card = document.createElement('div');
+    card.className = 'task-card';
+    card.innerHTML = `
+      <img class="task-icon" src="${task.icon}" alt="">
+      <div>
+        <div class="task-name">${task.name}</div>
+        <div class="task-meta">+${formatNum(task.reward)} $ · +${task.xp} опыта</div>
+      </div>
+      <button class="btn-small-action" type="button">Начать</button>
+    `;
+    card.querySelector('button').onclick = () => {
+      addMoney(task.reward);
+      state.xp += task.xp;
+      state.workDone += 1;
+      xp.textContent = formatNum(state.xp);
+      renderWork();
+    };
+    list.appendChild(card);
+  });
+}
+
+function renderAchievements() {
+  const list = document.getElementById('achievements-list');
+  if (!list) return;
+  list.innerHTML = '';
+
+  ACHIEVEMENTS.forEach(item => {
+    const rawProgress = item.getProgress();
+    const progress = Math.min(rawProgress, item.target);
+    const pct = Math.min(100, (progress / item.target) * 100);
+    const done = rawProgress >= item.target;
+    const card = document.createElement('div');
+    card.className = `achievement-card ${done ? 'complete' : ''}`;
+    card.innerHTML = `
+      <img class="achievement-icon" src="${done ? 'assets/icons/check.png' : 'assets/icons/trophy.png'}" alt="">
+      <div>
+        <div class="achievement-name">${item.name}</div>
+        <div class="achievement-desc">${item.desc}</div>
+        <div class="level-bar"><div class="level-bar-fill" style="width:${pct}%"></div></div>
+      </div>
+      <span class="achievement-progress">${formatNum(progress)} / ${formatNum(item.target)}</span>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function renderStore() {
+  const list = document.getElementById('store-list');
+  list.innerHTML = '';
+
+  STORE_ITEMS.forEach(item => {
+    const owned = !item.repeatable && state.storePurchases[item.id];
+    const affordable = state.balance >= item.price;
+    const card = document.createElement('div');
+    card.className = `store-card ${owned ? 'bought' : affordable ? 'affordable' : 'locked'}`;
+    card.innerHTML = `
+      <img class="store-icon" src="${item.icon}" alt="">
+      <div>
+        <div class="store-section">${item.desc}</div>
+        <div class="store-name">${item.name}</div>
+      </div>
+      <div class="store-price">${owned ? '✓' : formatNum(item.price) + ' $'}</div>
+      <button class="btn-cart" type="button" ${owned || !affordable ? 'disabled' : ''}>
+        <img src="assets/icons/cart.png" alt="">
+      </button>
+    `;
+    card.querySelector('button').onclick = () => {
+      if (owned || state.balance < item.price) return;
+      state.balance -= item.price;
+      state.storePurchases[item.id] = (state.storePurchases[item.id] || 0) + 1;
+      item.buy();
+      setBalance(state.balance);
+      renderStore();
+    };
     list.appendChild(card);
   });
 }
@@ -291,7 +515,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('income-per-sec').textContent = '+' + state.incomePerSec + '/сек';
 
   // Main buttons
-  document.querySelector('[data-action="work"]').onclick = () => showScreen('businesses');
+  document.querySelector('[data-action="work"]').onclick = () => showScreen('work');
   document.querySelector('[data-action="shop"]').onclick = () => showScreen('shop');
 
   // Empty state
